@@ -1,4 +1,4 @@
 library(testthat)
-library(mycytotalk)
+library(CytoTalk)
 
-test_check("mycytotalk")
+test_check("CytoTalk")

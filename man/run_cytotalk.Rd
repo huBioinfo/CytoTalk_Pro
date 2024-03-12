@@ -19,8 +19,7 @@ run_cytotalk(
   ntrial = 1000,
   cores = NULL,
   echo = TRUE,
-  dir_out = NULL,
-  silent = TRUE
+  dir_out = NULL
 )
 }
 \arguments{
@@ -74,8 +73,6 @@ empirical p-value for node prize and edge cost?}
 
 \item{dir_out}{Folder used for output; if not specified, a "CytoTalk-output"
 folder will be generated}
-
-\item{silent}{Should warning messages be exported?}
 }
 \value{
 A list containing model parameters, prefential expression measure,
@@ -86,14 +83,12 @@ pathways from the final extracted network
 Main CytoTalk Pipeline
 }
 \examples{
-\dontrun{
-cell_type_a <- "Fibroblasts"
+{
+cell_type_a <- "Macrophages"
 cell_type_b <- "LuminalEpithelialCells"
 cutoff_a <- 0.6
 cutoff_b <- 0.6
-dir_in <- "path/to/your/scRNAseq-data"
-lst_scrna <- CytoTalk::read_matrix_folder(dir_in)
-# result <- CytoTalk::run_cytotalk(lst_scrna,
+# result <- CytoTalk::run_cytotalk(CytoTalk::scrna_cyto,
 #                                  cell_type_a, cell_type_b,
 #                                  cutoff_a, cutoff_b,
 #                                  cores = 2)
