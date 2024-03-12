@@ -23,8 +23,9 @@ Read scRNAseq Data Matrix and Metadata
 {
 fpath_mat <- "~/Tan-Lab/scRNAseq-data-cpdb/sample_counts.txt"
 fpath_meta <- "~/Tan-Lab/scRNAseq-data-cpdb/sample_meta.txt"
-# lst_scrna <- CytoTalk::read_matrix_with_meta(fpath_mat, fpath_meta)
-# result <- str(lst_scrna$cell_types)
+#Make sure that you downloaded the file and that the name of the file path is correct
+lst_scrna <- CytoTalk::read_matrix_with_meta(fpath_mat, fpath_meta)
+result <- str(lst_scrna$cell_types)
 }
 
 }

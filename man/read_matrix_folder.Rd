@@ -7,7 +7,8 @@
 read_matrix_folder(
   dpath,
   pattern = ".*scRNAseq_(.+?)\\\\..+",
-  auto_transform = TRUE
+  auto_transform = TRUE,
+  silent = TRUE
 )
 }
 \arguments{
@@ -16,6 +17,8 @@ read_matrix_folder(
 \item{pattern}{A regular expression, matches scRNAseq filenames}
 
 \item{auto_transform}{Should count data be transformed if detected?}
+
+\item{silent}{Should warning messages be exported?}
 }
 \value{
 A named list containing a sparse data matrix and cell type metadata

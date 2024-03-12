@@ -1,15 +1,12 @@
-#' @noRd
 score_subnetwork <- function(prizes, costs, beta) {
     potential <- (beta * sum(prizes) - sum(costs))
     c(mean(prizes), mean(costs), potential)
 }
 
-#' @noRd
 subsample_network_shuffle <- function(prizes, costs, n_nodes, n_edges) {
     list(prize = sample(prizes, n_nodes), cost = sample(costs, n_edges))
 }
 
-#' @noRd
 gamma_fit <- function(x, y) {
     x <- x - min(x) + y
     shape <- mean(x)^2 / stats::var(x)
@@ -20,7 +17,6 @@ gamma_fit <- function(x, y) {
     )
 }
 
-#' @noRd
 gamma_score <- function(x, inverse=FALSE) {
     if (inverse) { x <- (-x) }
 
@@ -37,7 +33,6 @@ gamma_score <- function(x, inverse=FALSE) {
     stats::pgamma(x1, shape = shape, scale = scale, lower.tail = FALSE)
 }
 
-#' @noRd
 convert_names <- function(x, cell_type_a, cell_type_b) {
     suffix_a <- sprintf("__%s", cell_type_a)
     suffix_b <- sprintf("__%s", cell_type_b)
@@ -45,42 +40,7 @@ convert_names <- function(x, cell_type_a, cell_type_b) {
 }
 
 #' Final Network Pathway Analysis
-#'
-#' @param df_net_sub A subset of the final network (pathway); for example, the
-#'   output of the `extract_pathways` function
-#'
-#' @param lst_net Integrated network
-#'
-#' @param cell_type_a Name of cell type A that matches scRNA-seq file; for
-#'   example, `"Fibroblasts"`
-#'
-#' @param cell_type_b Name of cell type B that matches scRNA-seq file; for
-#'   example, `"LuminalEpithelialCells"`
-#'
-#' @param beta Upper limit of the test values of the PCSF objective function
-#'   parameter $I^2$, which is inversely proportional to the total number of
-#'   genes in a given cell-type pair; suggested to be 100 (default) if the
-#'   total number of genes in a given cell-type pair is above 10,000; if the
-#'   total number of genes is below 5,000, increase to 500
-#'
-#' @param ntrial How many empirical simulations to run? (Sample used to form
-#'   theoretical Gamma distribution)
-#'
-#' @examples {
-#' df_net_sub <- result_cyto$pathways$raw[[1]]
-#' lst_net <- result_cyto$integrated_net
-#' cell_type_a <- "Macrophages"
-#' cell_type_b <- "LuminalEpithelialCells"
-#' beta <- 20
-#' ntrial <- 1000
-#' result <- analyze_pathway(df_net_sub, lst_net, cell_type_a, cell_type_b, beta, ntrial)
-#' }
-#'
-#' @return A data-frame containing information relating to pathway size, mean
-#' node prize, mean edge cost, potential scores, and p-values from a fitted
-#' Gamma distribution
-#'
-#' @export
+#' @noRd
 analyze_pathway <- function(
     df_net_sub, lst_net, cell_type_a, cell_type_b, beta, ntrial) {
 

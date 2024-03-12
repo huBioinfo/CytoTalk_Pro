@@ -116,7 +116,7 @@ RNA sequencing datasets. Here's an example directory structure:
    ├─ scRNAseq_Macrophages.csv
    └─ scRNAseq_TCells.csv
  ```
-
+The example data can be downloaded in [github](https://github.com/huBioinfo/CytoTalk/blob/master/CytoTalk_package_v3.1.0.zip)
 <br />
 
 ⚠ **IMPORTANT** ⚠

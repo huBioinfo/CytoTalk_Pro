@@ -52,9 +52,6 @@ edge [color=limegreen arrowhead=normal arrowtail=normal dir=back]
 
 # FUNCTIONS
 
-
-#' @rdname doc_graphing
-#' @export
 write_network_sif <- function(df_net, cell_type_a, dir_out) {
     # format dir path
     dir_out_cs <- file.path(dir_out, "cytoscape")
@@ -105,8 +102,6 @@ write_network_sif <- function(df_net, cell_type_a, dir_out) {
     NULL
 }
 
-#' @rdname doc_graphing
-#' @export
 graph_pathway <- function(df_net_sub) {
     # reorder nodes
     df_cpy <- df_net_sub

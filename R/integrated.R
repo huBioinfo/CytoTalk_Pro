@@ -1,5 +1,3 @@
-#' @rdname doc_integrated
-#' @export
 nonselftalk <- function(mat_type, lrp) {
     # make sure function takes in a Matrix type
     mat_type <- Matrix::Matrix(mat_type)
@@ -24,8 +22,6 @@ nonselftalk <- function(mat_type, lrp) {
     -log10(ifelse(mi < 0, 0, mi))
 }
 
-#' @rdname doc_integrated
-#' @export
 gene_relevance <- function(mat_intra, lrp) {
     # create a new matrix, same size
     mat_nsq <- as.matrix(mat_intra) * 0
@@ -56,8 +52,6 @@ gene_relevance <- function(mat_intra, lrp) {
     vec_relev
 }
 
-#' @rdname doc_integrated
-#' @export
 node_prize <- function(mat_pem, cell_type, vec_relev) {
     # match PEM cell type
     vec_pem <- mat_pem[, cell_type == colnames(mat_pem)]
@@ -71,8 +65,6 @@ node_prize <- function(mat_pem, cell_type, vec_relev) {
     vec_relev * ifelse(vec_pem_match < 0, 0, vec_pem_match)
 }
 
-#' @rdname doc_integrated
-#' @export
 crosstalk <- function(
     mat_pem, cell_type_a, cell_type_b, vec_nst_a, vec_nst_b, mat_type, lrp) {
 
@@ -123,7 +115,6 @@ crosstalk <- function(
     df_ct
 }
 
-#' @noRd
 extract_lower_nonzero <- function(mat) {
     index <- Matrix::which(
         lower.tri(mat, diag = TRUE) & mat != 0, arr.ind = TRUE
@@ -133,8 +124,6 @@ extract_lower_nonzero <- function(mat) {
     df
 }
 
-#' @rdname doc_integrated
-#' @export
 integrate_network <- function(
     vec_nst_a, vec_nst_b, mat_intra_a, mat_intra_b,
     cell_type_a, cell_type_b, mat_pem, mat_type, lrp) {

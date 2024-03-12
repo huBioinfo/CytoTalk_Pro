@@ -1,39 +1,41 @@
 #' @noRd
 new_named_list <- function(mat, cell_types) {
-    list(mat = mat, cell_types = cell_types)
+  list(mat = mat, cell_types = cell_types)
 }
 
 #' @noRd
-vroom_silent <- function(...) {
+vroom_silent <- function(..., silent = TRUE) {
+  if (silent) {
     suppressMessages(vroom::vroom(..., progress = FALSE))
+  } else {
+    vroom::vroom(..., progress = FALSE)
+  }
 }
 
 #' @noRd
-vroom_write_silent <- function(x, file, rownames=FALSE) {
-    x <- as.data.frame(x)
-    if (rownames) { x <- tibble::rownames_to_column(x) }
+vroom_write_silent <- function(x, file, rownames = FALSE, silent = TRUE) {
+  x <- as.data.frame(x)
+  if (rownames) { x <- tibble::rownames_to_column(x) }
+  if (silent) {
     suppressMessages(vroom::vroom_write(x, file, progress = FALSE))
+  } else {
+    vroom::vroom_write(x, file, progress = FALSE)
+  }
 }
 
+
 #' @noRd
-vroom_with_rownames <- function(..., row_names=1) {
-    dat <- vroom_silent(...)
+vroom_with_rownames <- function(..., row_names=1, silent=TRUE) {
+    dat <- vroom_silent(..., silent=silent)
     tibble::column_to_rownames(dat, names(dat)[row_names])
 }
 
 #' @noRd
-vroom_sparse_with_rownames <- function(..., row_names=1) {
-    dat <- vroom_with_rownames(..., row_names = row_names)
+vroom_sparse_with_rownames <- function(..., row_names=1,silent=TRUE) {
+    dat <- vroom_with_rownames(..., row_names = row_names, silent=silent)
     Matrix::Matrix(Matrix::as.matrix(dat), sparse = TRUE)
 }
 
-#' Convert SingleCellExperiment to Named List
-#'
-#' @param sce SingleCellExperiment object
-#'
-#' @return A named list containing a sparse data matrix and cell type metadata
-#'
-#' @export
 from_single_cell_experiment <- function(sce) {
     count <- SingleCellExperiment::logcounts(sce)
     names <- colnames(sce)
@@ -47,6 +49,8 @@ from_single_cell_experiment <- function(sce) {
 #' @param pattern A regular expression, matches scRNAseq filenames
 #'
 #' @param auto_transform Should count data be transformed if detected?
+#' 
+#' @param silent Should warning messages be exported? 
 #'
 #' @examples {
 #' dir_in <- "~/Tan-Lab/scRNAseq-data"
@@ -58,7 +62,7 @@ from_single_cell_experiment <- function(sce) {
 #'
 #' @export
 read_matrix_folder <- function(
-    dpath, pattern=".*scRNAseq_(.+?)\\..+", auto_transform=TRUE) {
+    dpath, pattern=".*scRNAseq_(.+?)\\..+", auto_transform=TRUE, silent=TRUE) {
 
     # initial parameters
     mat <- NULL
@@ -72,7 +76,7 @@ read_matrix_folder <- function(
         cell_type <- gsub(pattern, "\\1", fpath)
         if (is.null(mat)) {
             # read in
-            mat <- vroom_sparse_with_rownames(fpath)
+            mat <- vroom_sparse_with_rownames(fpath,silent=silent)
             # start cell types vector
             cell_types <- rep(cell_type, ncol(mat))
         } else {

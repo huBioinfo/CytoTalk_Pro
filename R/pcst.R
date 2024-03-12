@@ -4,8 +4,6 @@ filter_arti <- function(x) {
     x[rowSums(x[index] == "ARTI") == 0 & 0.5 <= x["omega"], ]
 }
 
-#' @rdname doc_pcst
-#' @export
 run_pcst <- function(lst_net, beta_max, omega_min, omega_max) {
     # extract dataframes
     df_nodes <- lst_net$nodes[, c(1, 2)]
@@ -91,8 +89,6 @@ run_pcst <- function(lst_net, beta_max, omega_min, omega_max) {
     list(nodes = df_nodes_all, edges = df_edges_all)
 }
 
-#' @rdname doc_pcst
-#' @export
 summarize_pcst <- function(lst_pcst) {
     # extract dataframe,
     # remove artificial nodes
@@ -110,28 +106,33 @@ summarize_pcst <- function(lst_pcst) {
     )
 }
 
-#' @rdname doc_pcst
-#' @export
-ks_test_pcst <- function(lst_pcst) {
-    # extract dataframe,
-    # remove artificial nodes
-    df_edge <- filter_arti(lst_pcst[["edges"]])
-
-    vec_param <- paste(df_edge$beta, df_edge$omega)
-    vec_edges <- paste(df_edge$node1, df_edge$node2)
-    tab_edges <- table(vec_edges)
-
-    vec_counts <- tab_edges[cmatch(vec_edges, names(tab_edges))]
-    lst_counts <- tapply(vec_counts, vec_param, c)
-
-    # parallel loop for Kolmogorov-Smirnov test
-    i <- NULL
-    vec_pval <- foreach::`%dopar%`(
-        foreach::foreach(i = seq_len(length(lst_counts)), .combine = c), {
+ks_test_pcst <- function(lst_pcst,silent=TRUE) {
+  # extract dataframe,
+  # remove artificial nodes
+  df_edge <- filter_arti(lst_pcst[["edges"]])
+  
+  vec_param <- paste(df_edge$beta, df_edge$omega)
+  vec_edges <- paste(df_edge$node1, df_edge$node2)
+  tab_edges <- table(vec_edges)
+  
+  vec_counts <- tab_edges[cmatch(vec_edges, names(tab_edges))]
+  lst_counts <- tapply(vec_counts, vec_param, c)
+  
+  # parallel loop for Kolmogorov-Smirnov test
+  i <- NULL
+  vec_pval <- foreach::`%dopar%`(
+    foreach::foreach(i = seq_len(length(lst_counts)), .combine = c), {
+      if(silent){
         suppressWarnings(stats::ks.test(
-            lst_counts[[i]], unlist(lst_counts[-i]),
-            alternative = "less"
-        )$p.value)
+          lst_counts[[i]], unlist(lst_counts[-i]),
+          alternative = "less"
+        )$p.value)}
+      else{
+        stats::ks.test(
+          lst_counts[[i]], unlist(lst_counts[-i]),
+          alternative = "less"
+        )$p.value}
+      
     })
 
     # order by low to hight p-values
@@ -147,8 +148,6 @@ ks_test_pcst <- function(lst_pcst) {
     )
 }
 
-#' @rdname doc_pcst
-#' @export
 extract_network <- function(lst_net, lst_pcst, mat_pem, beta, omega) {
     df_param <- data.frame(beta, omega)
     df_select <- filter_arti(merge(df_param, lst_pcst$edges))[, -c(1, 2)]
@@ -190,8 +189,6 @@ extract_network <- function(lst_net, lst_pcst, mat_pem, beta, omega) {
     df_net[, index]
 }
 
-#' @rdname doc_pcst
-#' @export
 extract_pathways <- function(df_net, cell_type_a, depth) {
     # copy of dataframe
     df_cpy <- df_net

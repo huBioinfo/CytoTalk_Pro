@@ -1,5 +1,4 @@
-#' @rdname doc_pem
-#' @export
+#' @noRd
 pem_basic <- function(mat_scrna, labels) {
     # exponentiate the normalized data
     mat_scrna <- expm1(mat_scrna)
@@ -42,9 +41,7 @@ pem_basic <- function(mat_scrna, labels) {
     # return pem matrix
     as.matrix(mat_pem)
 }
-
-#' @rdname doc_pem
-#' @export
+#' @noRd
 pem <- function(lst_scrna) {
     pem_basic(lst_scrna[[1]], lst_scrna[[2]])
 }

@@ -1,7 +1,7 @@
-Package: CytoTalk
+Package: mycytotalk
 Title: Signal Transduction Networks from scRNA-seq
 Version: 0.99.9
-Depends: R (>= 4.1.0)
+Depends: R (>= 4.3.0)
 Authors@R: c(
     person("Yuxuan", "Hu",
 		   role = c("aut"),
@@ -25,9 +25,8 @@ Description: Perform de novo construction of signal transduction networks using
 	gene relevance, and non-self-talk score.
 License: MIT + file LICENSE
 Encoding: UTF-8
-LazyData: true
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.1.2
+RoxygenNote: 7.2.3
 Imports:
     DiagrammeR,
     DiagrammeRsvg,

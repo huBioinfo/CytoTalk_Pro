@@ -1,13 +1,9 @@
-#' @rdname doc_mutinfo
-#' @export
 discretize_sparse <- function(mat, disc="equalfreq", nbins=nrow(mat)^(1/3)) {
     mat_disc <- infotheo::discretize(as.matrix(mat), disc, max(2, nbins))
     mat_disc <- t(do.call(rbind, mat_disc)) - 1
     Matrix::Matrix(mat_disc, sparse = TRUE)
 }
 
-#' @rdname doc_mutinfo
-#' @export
 mutinfo_xy <- function(x, y, method="emp", normalize=FALSE) {
     if (!normalize) {
         return(infotheo::mutinformation(x, y, method))
@@ -25,8 +21,6 @@ mutinfo_xy <- function(x, y, method="emp", normalize=FALSE) {
     ((h1 + h2) - h12) / hm
 }
 
-#' @rdname doc_mutinfo
-#' @export
 mi_mat_parallel <- function(mat, method="emp", normalize=FALSE) {
     mat <- as.matrix(mat)
     n <- ncol(mat)

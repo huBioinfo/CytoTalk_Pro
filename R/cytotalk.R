@@ -50,13 +50,18 @@
 #' @param cores How many cores to use for parallel processing?
 #'
 #' @param echo Should update messages be printed?
+#' 
+#' @param silent Should warning messages be exported? 
 #'
-#' @examples {
-#' cell_type_a <- "Macrophages"
+#' @examples 
+#' \dontrun{
+#' cell_type_a <- "Fibroblasts"
 #' cell_type_b <- "LuminalEpithelialCells"
 #' cutoff_a <- 0.6
 #' cutoff_b <- 0.6
-#' # result <- CytoTalk::run_cytotalk(CytoTalk::scrna_cyto,
+#' dir_in <- "~/Tan-Lab/scRNAseq-data"
+#' lst_scrna <- CytoTalk::read_matrix_folder(dir_in)
+#' # result <- CytoTalk::run_cytotalk(lst_scrna,
 #' #                                  cell_type_a, cell_type_b,
 #' #                                  cutoff_a, cutoff_b,
 #' #                                  cores = 2)
@@ -73,7 +78,7 @@ run_cytotalk <- function(
     pcg=CytoTalk::pcg_human, lrp=CytoTalk::lrp_human,
     beta_max=100, omega_min=0.5, omega_max=0.5,
     depth=3, ntrial=1000,
-    cores=NULL, echo=TRUE, dir_out=NULL) {
+    cores=NULL, echo=TRUE, dir_out=NULL,silent=TRUE) {
 
     # save numeric parameters
     params <- list(
@@ -109,7 +114,7 @@ run_cytotalk <- function(
     # write out PEM matrix
     if (!is.null(dir_out)) {
         fpath <- file.path(dir_out, "PEM.txt")
-        vroom_write_silent(mat_pem, fpath, rownames = TRUE)
+        vroom_write_silent(mat_pem, fpath, rownames = TRUE,silent=silent)
     }
 
     if (echo) {
@@ -144,7 +149,7 @@ run_cytotalk <- function(
         fpath <- file.path(dir_out, "IntegratedNodes.txt")
         vroom_write_silent(lst_net$nodes, fpath)
         fpath <- file.path(dir_out, "IntegratedEdges.txt")
-        vroom_write_silent(lst_net$edges, fpath)
+        vroom_write_silent(lst_net$edges, fpath, silent=silent)
     }
 
     if (echo) {
@@ -156,23 +161,23 @@ run_cytotalk <- function(
     # write out PCST nodes and edges
     if (!is.null(dir_out)) {
         fpath <- file.path(dir_out, "PCSTNodeOccurance.txt")
-        vroom_write_silent(lst_pcst$nodes, fpath)
+        vroom_write_silent(lst_pcst$nodes, fpath,silent)
         fpath <- file.path(dir_out, "PCSTEdgeOccurance.txt")
-        vroom_write_silent(lst_pcst$edges, fpath)
+        vroom_write_silent(lst_pcst$edges, fpath,silent=silent)
     }
 
     if (echo) {
         tick(6, "Determine best signaling network...")
     }
 
-    df_test <- ks_test_pcst(lst_pcst)
+    df_test <- ks_test_pcst(lst_pcst, silent=silent)
     index <- order(as.numeric(df_test[, "pval"]))[1]
     beta <- df_test[index, "beta"]
     omega <- df_test[index, "omega"]
 
     # write out PCST scores
     if (!is.null(dir_out)) {
-        vroom_write_silent(df_test, file.path(dir_out, "PCSTScores.txt"))
+        vroom_write_silent(df_test, file.path(dir_out, "PCSTScores.txt"), silent=silent)
     }
 
     if (echo) {
@@ -215,7 +220,7 @@ run_cytotalk <- function(
         fnames <- names(lst_path)
         for (fn in fnames) {
             fpath <- file.path(dir_path, sprintf("%s.txt", fn))
-            vroom_write_silent(lst_path[[fn]], fpath)
+            vroom_write_silent(lst_path[[fn]], fpath, silent=silent)
         }
 
         dir_gv <- file.path(dir_out, "graphviz")
@@ -233,7 +238,7 @@ run_cytotalk <- function(
     # write out final network
     if (!is.null(dir_out)) {
         write_network_sif(df_net, cell_type_a, dir_out)
-        vroom_write_silent(df_net, file.path(dir_out, "FinalNetwork.txt"))
+        vroom_write_silent(df_net, file.path(dir_out, "FinalNetwork.txt"), silent=silent)
     }
 
     if (echo) {
@@ -263,7 +268,7 @@ run_cytotalk <- function(
     # write out analysis
     if (!is.null(dir_out)) {
         fpath <- file.path(dir_out, "PathwayAnalysis.txt")
-        vroom_write_silent(df_pval, fpath)
+        vroom_write_silent(df_pval, fpath, silent=silent)
     }
 
     # return out
