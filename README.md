@@ -87,10 +87,35 @@ page](https://graphviz.org/download/) for more information.
 
 ### Installation
 
-If you have `devtools` installed, you can use the `install_github`
-function directly on this repository (under development):
+(1) Install [Conda](https://docs.conda.io/projects/conda/en/latest/user-guide/install/index.html)
+at the very beginning for all of Windows, Linux and macOS users.
+
+!!! For Windows users, please additionally install [Microsoft Visual C++ Build
+Tools](https://visualstudio.microsoft.com/visual-cpp-build-tools/) and
+[Rtools
+4.0](https://cran.r-project.org/bin/windows/Rtools/rtools40.html).
+
+(2) Install a python module 
+[`pcst_fast`](https://github.com/fraenkel-lab/pcst_fast) by running the commands below in the *R* (>= v4.1.3) console.
 
 ``` r
+if (!requireNamespace("reticulate", quietly = TRUE)) {
+  install.packages("reticulate")
+}
+library(reticulate)  # To install and call Python modules from R.
+conda_create(envname = "PCSF", "python=3.10")  # Create a new Conda environment to facilitate the Python module installation. python=3.10 is compatible with numpy=1.26
+conda_install(envname = "PCSF", "pybind11")  # Install two necessary Python modules for correctly compiling and using the "pcst_fast" Python module.
+conda_install(envname = "PCSF", "numpy=1.26")  # Avoid using numpy>=2.0, which is not compatible with the python module "pcst_fast".
+conda_install(envname = "PCSF", "git+https://github.com/fraenkel-lab/pcst_fast.git", pip = TRUE) # To install the "pcst_fast" module.
+```
+
+(3) Install the CytoTalk package in the *R* console.
+
+``` r
+if (!requireNamespace("devtools", quietly = TRUE)) {
+  install.packages("devtools")
+}
+options(timeout = 600)  # Giving more time for downloading.
 devtools::install_github("tanlabcode/CytoTalk", ref = "feature_RcallPy")
 ```
 
